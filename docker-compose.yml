@@ -13,6 +13,7 @@ services:
       - mysql
 
   # composerの依存をインストールするやつ。upしたときに立ち上がって終わると勝手に消える
+  # 初回セットアップ以降は↓のコメントアウトを消してください
   # composer_depend_installer:
   #   container_name: composer_installer
   #   build:
