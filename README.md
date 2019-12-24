@@ -8,8 +8,9 @@
 # セットアップ
 
 1. `git clone` してくる
-2. 素の状態で `docker-compose up`する。
-3. プロジェクトを作る(新規作成でない場合は次に飛ばす)
+2. `mkdir server` でディレクトリを作る(名前同じじゃないとつらいかも)
+3. 素の状態で `docker-compose up`する。
+4. プロジェクトを作る(新規作成でない場合は次に飛ばす)
 
 ```
 # まずコンテナに入る
@@ -22,7 +23,7 @@ $ composer create-project laravel/laravel=5.5 ./
 $ exit
 ```
 
-4. `docker-compose.yml`のコメントアウトを一部外す
+5. `docker-compose.yml`のコメントアウトを一部外す
 
 ```docker-compose.yml
   # composerの依存をインストールするやつ。upしたときに立ち上がって終わると勝手に消える
