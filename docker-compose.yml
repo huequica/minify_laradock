@@ -1,0 +1,71 @@
+version: '3'
+
+services: 
+  # 永続するコンテナ
+  php: 
+    container_name: PHP
+    build: 
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    volumes:
+    - ./server:/var/www
+    depends_on:
+      - mysql
+
+  # composerの依存をインストールするやつ。upしたときに立ち上がって終わると勝手に消える
+  # composer_depend_installer:
+  #   container_name: composer_installer
+  #   build:
+  #     context: .
+  #     dockerfile: ./docker/php/Dockerfile
+  #   volumes:
+  #     - ./server:/var/www
+  #   command: composer install
+
+  nginx:
+    image: nginx
+    container_name: nginx
+    ports:
+    - 8080:80
+    volumes:
+    - ./server:/var/www
+    - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+    - php
+
+
+  mysql:
+    image: mysql:5.7
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: password
+      TZ: 'Asia/Tokyo'
+    volumes:
+    - ./docker/mysql/data:/var/lib/mysql
+    - ./docker/mysql/initdb.d:/docker-entrypoint-initdb.d
+    - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+    ports:
+    - 3306:3306
+
+
+### 以下オプション。必要であればコメント外して付けてください。
+
+  # phpmyadmin:
+  #   image: phpmyadmin/phpmyadmin
+  #   ports:
+  #     - 8081:80
+  #   environment:
+  #     MYSQL_USER: docker
+  #     MYSQL_PASSWORD: password
+  #     MYSQL_ROOT_PASSWORD: password
+  #   links:
+  #     - mysql:db
+  #   depends_on:
+  #     - mysql
+  #     - nginx
+  #   volumes:
+  #     - /sessions
+  #     - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
